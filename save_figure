@@ -1,0 +1,74 @@
+function save_figure(position, output_fnm, orig_dir, fig_path, isSave, isPrint, isDark, bkg_color)
+%savefigure_spins - Easier to use wrapper function for exporting high
+%quality, high resolution figures into subfolders ./Raster and ./Vector
+%
+% Inputs:
+%    position - [width height] in centimetres of printed figure
+%    output_fnm - char of output filename
+%    orig_dir - directory for calling script (generally pwd)
+%    fig_path - directory to save the figures in
+%    isSave - flag to saving
+%    isPrint - Flag for increased quality for saving (typically slower)
+%    isDark - flag to use a coloured background (default false)
+%    bkg_color = colour for figure background [r g b]
+%
+% Other m-files required: none
+% Subfunctions: none
+% MAT-files required: none
+%
+% See also: OTHER_FUNCTION_NAME1,  OTHER_FUNCTION_NAME2
+% Author: Sam Hartharn-Evans
+% Department of Geography & Environmental Sciences, Northumbria University
+% email address: sam.hartharn-evans@northumbria.ac.uk
+% GitHub: https://github.com/HartharnSam
+% 03-Jul-2025; Last revision: 03-Jul-2025
+% MATLAB Version: 23.2.0.2668659 (R2023b) Update 9
+
+%---------------------------------------------------
+%% BEGIN CODE %%
+%---------------------------------------------------
+arguments
+    position (1, 2) double
+    output_fnm (1, 1) string
+    orig_dir (1, 1) string
+    fig_path (1, 1) string
+    isSave (1, 1) logical
+    isPrint (1, 1) logical
+    isDark (1, 1) logical = false;
+    bkg_color (3, 1) double = [0 0 0];
+end
+
+figure_print_format(gcf, 12);
+
+set(gcf, 'PaperUnits', 'centimeters', 'Units', 'centimeters');
+set(gcf, 'PaperPosition', [0 0 position(1) position(2)], 'Position', [0.932291666666671 0.662708333333335 position(1) position(2)]);
+
+if isSave
+    %figure_print_format(fig);
+    cd(fig_path);
+
+    % IF YOUR MATLAB VERSION IS BEFORE R2020a UNCOMMENT THESE 2 LINES
+    %print(['../Figures/', output_fnm, '.png'], '-dpng');
+    %print(['../Figures/', output_fnm, '.eps'], '-depsc', '-opengl');
+
+    % IF YOUR MATLAB VERSION IS BEFORE R2020a COMMENT THESE LINES
+    if isDark
+        if isPrint
+            warning("Dark mode not configured with high quality exports");
+        end
+        % Uses export_figs (https://github.com/altmany/export_fig)
+        export_figs(gcf, "./Raster/"+output_fnm+".png", '-png', "-r450");
+        export_figs(gcf, "./Raster/"+output_fnm+".eps", '-eps', "-r450");
+
+    else
+
+        exportgraphics(gcf, "./Raster/"+output_fnm+".png", 'Resolution', 450);
+        if isPrint
+            set(gcf,'renderer','painters');
+            exportgraphics(gcf, "./Vector/"+output_fnm+".pdf","ContentType", 'Vector');
+        else
+            exportgraphics(gcf, "./Vector/"+output_fnm+".eps","Resolution", 450);
+        end
+        cd(orig_dir);
+    end
+end
