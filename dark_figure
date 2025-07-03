@@ -1,0 +1,61 @@
+function dark_figure(fig_hand, fig_color)
+%DARK_FIGURE - Changes the background colour for figures, and if
+%appropriate also changes their text colour to ensure good contrast. 
+%
+% Syntax:  dark_figure(gcf, [20 20 20]);
+%
+% Inputs:
+%    fig_hand - Handle of figure to work on 
+%    fig_color - RGB colour code, can also be in [255 255 255] or [1 1 1]
+%    type
+%
+% Other m-files required: none
+% Subfunctions: none
+% MAT-files required: none
+%
+% See also: EXPORT_FIG (needed for printing with the right coloured
+% background)
+% Author: Sam Hartharn-Evans
+% School of Mathematics, Statistics and Physics, Newcastle University
+% email address: s.hartharn-evans2@newcastle.ac.uk
+% GitHub: https://github.com/HartharnSam
+% 30-Jun-2022; Last revision: 30-Jun-2022
+% MATLAB Version: 9.12.0.1956245 (R2022a) Update 2
+
+% Check if the fig_color is in the out of 255 format or out of 1
+if sum(fig_color) > 3
+    fig_color = fig_color/255;
+end
+
+% Identify if we want white or black text
+if sum(fig_color)<600/255 % note the 300 value has no reasoning, it may need changing!
+    axcolor = 'w';
+else
+    axcolor = 'k';
+end
+
+% Change figure background colour
+fig_hand.Color = fig_color;
+
+% Change axis & axis title colours
+childs = allchild(fig_hand);
+ax = findobj(childs,'Type','Axes');
+if ~isempty(ax)
+    for ii = 1:length(ax)
+        if ~strcmp(ax(ii).Type, 'axestoolbar')
+            % change font size and font
+            ax(ii).YColor = axcolor;
+            ax(ii).XColor = axcolor;
+            ax(ii).Title.Color = axcolor;
+
+        end
+    end
+end
+
+% Change any colourbars
+cbar = findobj(childs,'Type','ColorBar');
+if ~isempty(cbar)
+    for ii = 1:length(cbar)
+        cbar(ii).YColor = axcolor;
+    end
+end
