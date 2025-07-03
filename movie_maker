@@ -27,7 +27,7 @@ for ii = t1:t2
         figure_print_format(gcf);
         
     end
-    set(gca, 'NextPlot', 'replacechildren') % note this needs setting for each axis
+    set(gca, 'NextPlot', 'replacechildren') % note this needs setting for each axis. This, combined with the previous if statement is what makes this fast! 
     % getframe, and write to the videoWriter object
     pause(.1);
     writeVideo(vid, getframe(gcf));
