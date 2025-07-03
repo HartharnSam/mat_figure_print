@@ -13,3 +13,6 @@ save_figure([19 12], "figure_1", pwd, "../../output_files/", true, false, true, 
 
 Needs there to be two folders in the fig_path - "Raster" and "Vector" which splits the raster and vector copies of files into two folders.
 True vector-printing (where all elements are vectorised, except colormaps saved as bitmaps) only occurs under isPrint = true, since this is the slowest step! 
+
+# Movie Plotter (fast formatting)
+An efficient script for saving animation data where the plots are updated each frame, but formatting should be constant. 
