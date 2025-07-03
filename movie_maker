@@ -1,0 +1,36 @@
+clf;
+% Read in data 
+x = 0:.1:10;
+y = (0:.1:20)';
+t = 0:100;
+[X, Y] = meshgrid(x, y);
+% Set up the figure, and videoWriter 
+figure(1);
+vid = VideoWriter('movie_3Dfast.mp4', 'MPEG-4' );
+vid.FrameRate = 2;
+open(vid)
+
+t1 = 2; t2 = length(t);
+
+for ii = t1:t2
+    %Read and plot the timestep specific data
+    z = cos(x+y+t(ii));
+    pcolor(X, Y, z);
+    hold on
+    yline(10);
+    if ii == t1
+        xlabel('x'); ylabel('z');
+        xlim([min(x) max(x)]);
+        ylim([min(y) max(y)]);
+        axis square;
+        % Add any other formatting here
+        figure_print_format(gcf);
+        
+    end
+    set(gca, 'NextPlot', 'replacechildren') % note this needs setting for each axis
+    % getframe, and write to the videoWriter object
+    pause(.1);
+    writeVideo(vid, getframe(gcf));
+end
+
+close(vid)
